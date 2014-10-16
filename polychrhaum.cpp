@@ -68,5 +68,21 @@ void PolychrHAUMcommon::loop_step() {
 	}
 }
 
+void PolychrHAUMcommon::log(const char *msg) {
+#ifdef BUILD_PC
+        printf("%s", msg);
+#else
+        Serial.print(msg);
+#endif
+}
+
+void PolychrHAUMcommon::log(int msg) {
+#ifdef BUILD_PC
+        printf("%d", msg);
+#else
+        Serial.print(msg);
+#endif
+}
+
 };
 

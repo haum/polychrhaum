@@ -73,6 +73,16 @@ class PolychrHAUMcommon {
 		  */
 		void loop_step();
 
+		/** Send message to console
+		  * @param [in] msg Null-terminated c-string to send
+		  */
+		void log(const char *msg);
+
+		/** Send number to console
+		  * @param [in] msg Number to send
+		  */
+		void log(int msg);
+
 		HmiSupply power; /// Power supply interface
 		HmiButton btn1;  /// Button 1
 		HmiButton btn2;  /// Button 2
