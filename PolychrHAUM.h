@@ -1,6 +1,8 @@
 #ifndef POLYCHRHAUM_POLYCHRHAUM_H
 #define POLYCHRHAUM_POLYCHRHAUM_H
 
+#include "hmi/hmi_button.h"
+
 namespace polychrhaum {
 
 /** Basic animation period **/
@@ -73,6 +75,9 @@ class PolychrHAUMcommon {
 		  */
 		void loop_step();
 
+		HmiButton btn1; /// Button 1
+		HmiButton btn2; /// Button 2
+
 	private:
 		int pin_btn1,         /// Button 1 pin
 		    pin_btn2,         /// Button 2 pin
@@ -82,9 +87,12 @@ class PolychrHAUMcommon {
 		    pin_pot_light,    /// Light potentiometer pin
 		    pin_pot_speed;    /// Speed potentiometer pin
 
-		long last_frame_time; /// Time of last frame
+		long last_frame_time, /// Time of last frame
+		     last_btn_time;   /// Time of last button computation
 
 		void (*fct_animate)(); /// Animation function
+
+		HmiButton btn_power; /// Power button
 };
 
 };
