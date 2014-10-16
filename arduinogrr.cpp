@@ -4,5 +4,6 @@
 
 #include "hmi/main_pc.cpp"
 #include "hmi/hmi_button.cpp"
+#include "hmi/hmi_supply.cpp"
 
 #endif

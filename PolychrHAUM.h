@@ -1,6 +1,7 @@
 #ifndef POLYCHRHAUM_POLYCHRHAUM_H
 #define POLYCHRHAUM_POLYCHRHAUM_H
 
+#include "hmi/hmi_supply.h"
 #include "hmi/hmi_button.h"
 
 namespace polychrhaum {
@@ -16,8 +17,6 @@ class PolychrHAUMcommon {
 			pin_btn1(-1),
 			pin_btn2(-1),
 			pin_power_btn(-1),
-			pin_power_cmd(-1),
-			pin_power_status(-1),
 			pin_pot_light(-1),
 			pin_pot_speed(-1),
 			last_frame_time(0),
@@ -41,9 +40,8 @@ class PolychrHAUMcommon {
 		  * @param btn    Pin of power button
 		  */
 		void config_power(int cmd, int status, int btn) {
-			pin_power_cmd = cmd;
-			pin_power_status = status;
 			pin_power_btn = btn;
+			power.config(cmd, status);
 		}
 
 		/** Configure on which pin light control potentiometer is connected
@@ -75,15 +73,14 @@ class PolychrHAUMcommon {
 		  */
 		void loop_step();
 
-		HmiButton btn1; /// Button 1
-		HmiButton btn2; /// Button 2
+		HmiSupply power; /// Power supply interface
+		HmiButton btn1;  /// Button 1
+		HmiButton btn2;  /// Button 2
 
 	private:
 		int pin_btn1,         /// Button 1 pin
 		    pin_btn2,         /// Button 2 pin
 		    pin_power_btn,    /// Power button pin
-		    pin_power_cmd,    /// Power command pin
-		    pin_power_status, /// Power status pin
 		    pin_pot_light,    /// Light potentiometer pin
 		    pin_pot_speed;    /// Speed potentiometer pin
 

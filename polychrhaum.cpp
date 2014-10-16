@@ -16,13 +16,11 @@ void PolychrHAUMcommon::setup() {
 	btn1.init();
 	btn2.init();
 	btn_power.init();
+	power.init();
 #ifndef BUILD_PC
 	pinMode(pin_btn1, INPUT_PULLUP);
 	pinMode(pin_btn2, INPUT_PULLUP);
-	pinMode(pin_power_status, INPUT);
 	pinMode(pin_power_btn, INPUT_PULLUP);
-	digitalWrite(pin_power_cmd, LOW);
-	pinMode(pin_power_cmd, OUTPUT);
 	Serial.begin(115200);
 #endif
 	last_btn_time = millis();
@@ -49,6 +47,15 @@ void PolychrHAUMcommon::loop_step() {
 	// Compute animation
 	if (time >= last_frame_time + dtms) {
 		last_frame_time = time;
+
+		// Power management
+		if (!power.is_powered()) {
+			if (btn_power.touched() || btn1.touched() || btn2.touched())
+				power.poweron();
+		} else {
+			if (btn_power.slpressed())
+				power.poweroff();
+		}
 
 		// Animation
 		if (fct_animate)
