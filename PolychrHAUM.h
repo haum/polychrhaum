@@ -1,6 +1,7 @@
 #ifndef POLYCHRHAUM_POLYCHRHAUM_H
 #define POLYCHRHAUM_POLYCHRHAUM_H
 
+#include "animators/animators.h"
 #include "hmi/hmi_supply.h"
 #include "hmi/hmi_button.h"
 #include "hmi/hmi_leds.h"
