@@ -46,7 +46,7 @@ void PolychrHAUMcommon::loop_step() {
 	}
 
 	// Compute animation
-	if (time >= last_frame_time + dtms) {
+	if (time >= last_frame_time + dtms + adj_time) {
 		last_frame_time = time;
 
 		// Power management
@@ -58,6 +58,19 @@ void PolychrHAUMcommon::loop_step() {
 				power.poweroff();
 		}
 
+		// Potentiometers
+#ifndef BUILD_PC
+		if (pin_pot_light >= 0) {
+			int val = analogRead(pin_pot_light) >> 2;
+			leds.set_brightness(val);
+		}
+		if (pin_pot_speed >= 0) {
+			int val = analogRead(pin_pot_speed);
+			adj_time = (1 - (val / 640.0)) * dtms * 3 - dtms / 2;
+			if (val > 640)
+				adj_time = 0;
+		}
+#endif
 		// Animation
 		leds.update();
 		leds.clear();

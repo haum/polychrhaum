@@ -8,7 +8,7 @@
 namespace polychrhaum {
 
 /** Basic animation period **/
-const int dtms = 16;
+const int dtms = 40;
 
 /** PolychrHAUM controller class (non template dependant part) **/
 class PolychrHAUMcommon {
@@ -20,6 +20,7 @@ class PolychrHAUMcommon {
 			pin_power_btn(-1),
 			pin_pot_light(-1),
 			pin_pot_speed(-1),
+			adj_time(0),
 			last_frame_time(0),
 			fct_animate(0),
 			leds(leds) {}
@@ -95,6 +96,8 @@ class PolychrHAUMcommon {
 		    pin_power_btn,    /// Power button pin
 		    pin_pot_light,    /// Light potentiometer pin
 		    pin_pot_speed;    /// Speed potentiometer pin
+
+		char adj_time; /// Adjust timing loop
 
 		long last_frame_time, /// Time of last frame
 		     last_btn_time;   /// Time of last button computation
