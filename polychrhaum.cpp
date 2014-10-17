@@ -17,6 +17,7 @@ void PolychrHAUMcommon::setup() {
 	btn2.init();
 	btn_power.init();
 	power.init();
+	leds.init();
 #ifndef BUILD_PC
 	pinMode(pin_btn1, INPUT_PULLUP);
 	pinMode(pin_btn2, INPUT_PULLUP);
@@ -58,6 +59,8 @@ void PolychrHAUMcommon::loop_step() {
 		}
 
 		// Animation
+		leds.update();
+		leds.clear();
 		if (fct_animate)
 			fct_animate();
 

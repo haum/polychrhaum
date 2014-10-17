@@ -3,6 +3,7 @@
 
 #include "hmi/hmi_supply.h"
 #include "hmi/hmi_button.h"
+#include "hmi/hmi_leds.h"
 
 namespace polychrhaum {
 
@@ -13,14 +14,15 @@ const int dtms = 16;
 class PolychrHAUMcommon {
 	public:
 		/** Build object **/
-		PolychrHAUMcommon() :
+		PolychrHAUMcommon(HmiLedsCommon & leds) :
 			pin_btn1(-1),
 			pin_btn2(-1),
 			pin_power_btn(-1),
 			pin_pot_light(-1),
 			pin_pot_speed(-1),
 			last_frame_time(0),
-			fct_animate(0) {}
+			fct_animate(0),
+			leds(leds) {}
 
 		/** Get number of leds of each side [-HALF_WIDTH:HALF_WIDTH] **/
 		virtual int get_halfsize() = 0;
@@ -99,6 +101,8 @@ class PolychrHAUMcommon {
 
 		void (*fct_animate)(); /// Animation function
 
+		HmiLedsCommon & leds;
+
 		HmiButton btn_power; /// Power button
 };
 
@@ -111,7 +115,9 @@ class PolychrHAUMcommon {
 template <int FULLSIZE, int PIN_LEDDATA>
 class PolychrHAUM : public polychrhaum::PolychrHAUMcommon {
 	public:
+		PolychrHAUM() : PolychrHAUMcommon(leds), leds(*this) {}
 		int get_halfsize() { return (FULLSIZE-1) / 2; }
+		polychrhaum::HmiLeds <FULLSIZE, PIN_LEDDATA> leds; /// Led strip
 };
 
 #endif
