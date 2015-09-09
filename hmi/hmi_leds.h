@@ -58,11 +58,14 @@ class HmiLeds : public HmiLedsCommon {
 		HmiLeds(PolychrHAUMcommon & p) : HmiLedsCommon(p) {
 			ledvalues = theleds;
 #ifndef BUILD_PC
-			FastLED.addLeds<NEOPIXEL, PIN_LEDDATA>(theleds, sizeof(theleds)/sizeof(*theleds));
+			FastLED.addLeds(&ws2811, theleds, sizeof(theleds)/sizeof(*theleds));
 #endif
 		}
 
 	private:
+#ifndef BUILD_PC
+		WS2811Controller800Khz<PIN_LEDDATA, GRB> ws2811;
+#endif
 		CRGB theleds[FULLSIZE]; /// Real led color storage
 };
 
