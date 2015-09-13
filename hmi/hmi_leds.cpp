@@ -6,6 +6,7 @@
 extern SDL_Surface * screen;
 extern unsigned int pixel_size;
 extern unsigned int pixel_jump;
+extern bool pc_powered;
 void pc_update_screen();
 #else
 #include <Arduino.h>
@@ -30,7 +31,7 @@ void HmiLedsCommon::set_rgb(int led, unsigned char r, unsigned char g, unsigned 
 	int hwidth = polychrhaum.get_halfsize();
 	if (led < -hwidth || led > hwidth) return;
 #ifdef BUILD_PC
-	if (screen) {
+	if (screen && pc_powered) {
 		SDL_Rect led_rect;
 		led_rect.x = (hwidth + led) * pixel_jump;
 		led_rect.y = (100 - pixel_size) / 2;

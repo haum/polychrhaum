@@ -11,6 +11,8 @@ int pc_btn_pwr = 0; // Power button
 int pc_btn_1 = 0; // Button 1
 int pc_btn_2 = 0; // Button 2
 
+bool pc_powered = false;
+
 unsigned int pixel_size = 4;
 unsigned int pixel_jump = 4;
 
