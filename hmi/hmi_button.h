@@ -1,9 +1,9 @@
 #ifndef POLYCHRHAUM_HMI_BUTTON_H
 #define POLYCHRHAUM_HMI_BUTTON_H
 
-namespace polychrhaum {
+class PolychrHAUM; // Forward declaration
 
-class PolychrHAUMcommon; // Forward declaration
+namespace polychrhaum {
 
 /** Button interface **/
 class HmiButton {
@@ -123,7 +123,7 @@ class HmiButton {
 		HmiButtonPress press;
 		int timer;
 
-	friend class PolychrHAUMcommon;
+	friend class ::PolychrHAUM;
 };
 
 };

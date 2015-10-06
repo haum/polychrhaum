@@ -10,14 +10,17 @@ extern int pc_btn_2;
 #include "Arduino.h"
 #endif
 
-namespace polychrhaum {
+void PolychrHAUM::setup(unsigned int fullsize, CFastLED * fleds) {
+	if (fullsize == 0)
+		fullsize = fleds->size();
 
-void PolychrHAUMcommon::setup() {
+	halfsize = (fullsize - 1) / 2;
+
 	btn1.init();
 	btn2.init();
 	btn_power.init();
 	power.init();
-	leds.init();
+	leds.init(fleds);
 #ifndef BUILD_PC
 	pinMode(pin_btn1, INPUT_PULLUP);
 	pinMode(pin_btn2, INPUT_PULLUP);
@@ -28,11 +31,11 @@ void PolychrHAUMcommon::setup() {
 	last_frame_time = millis();
 }
 
-void PolychrHAUMcommon::loop_step() {
+void PolychrHAUM::loop_step() {
 	long time = millis();
 
 	// Compute button press
-	if (time >= last_btn_time + dtms / 4) {
+	if (time >= last_btn_time + polychrhaum::dtms / 4) {
 		last_btn_time = time;
 #ifdef BUILD_PC
 		btn_power.compute(pc_btn_pwr);
@@ -46,7 +49,7 @@ void PolychrHAUMcommon::loop_step() {
 	}
 
 	// Compute animation
-	if (time >= last_frame_time + dtms + adj_time) {
+	if (time >= last_frame_time + polychrhaum::dtms + adj_time) {
 		last_frame_time = time;
 
 		// Power management
@@ -66,7 +69,7 @@ void PolychrHAUMcommon::loop_step() {
 		}
 		if (pin_pot_speed >= 0) {
 			int val = analogRead(pin_pot_speed);
-			adj_time = (1 - (val / 640.0)) * dtms * 3 - dtms / 2;
+			adj_time = (1 - (val / 640.0)) * polychrhaum::dtms * 3 - polychrhaum::dtms / 2;
 			if (val > 640)
 				adj_time = 0;
 		}
@@ -84,7 +87,7 @@ void PolychrHAUMcommon::loop_step() {
 	}
 }
 
-void PolychrHAUMcommon::log(const char *msg) {
+void PolychrHAUM::log(const char *msg) {
 #ifdef BUILD_PC
         printf("%s", msg);
 #else
@@ -92,13 +95,11 @@ void PolychrHAUMcommon::log(const char *msg) {
 #endif
 }
 
-void PolychrHAUMcommon::log(int msg) {
+void PolychrHAUM::log(int msg) {
 #ifdef BUILD_PC
         printf("%d", msg);
 #else
         Serial.print(msg);
 #endif
 }
-
-};
 

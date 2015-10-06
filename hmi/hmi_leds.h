@@ -7,19 +7,20 @@ struct CRGB { unsigned char r, g, b; };
 #include <FastLED.h>
 #endif
 
+class PolychrHAUM; // Forward declaration
+
 namespace polychrhaum {
 
-class PolychrHAUMcommon; // Forward declaration
-
-class HmiLedsCommon {
+class HmiLeds {
 	public:
 		/** Constructor
 		  * @param p PolychrHAUM instance
+		  * @param leds pointer to CFastLED
 		  */
-		HmiLedsCommon(PolychrHAUMcommon & p) : polychrhaum(p) {}
+		HmiLeds(PolychrHAUM & p) : polychrhaum(p) {}
 
 		/** Init leds controller **/
-		void init();
+		void init(CFastLED*);
 
 		/** Clears all leds **/
 		void clear();
@@ -44,29 +45,9 @@ class HmiLedsCommon {
 		CRGB * ledvalues; /// Pointer to values
 
 	private:
-		PolychrHAUMcommon & polychrhaum; /// PolychrHAUM instance
+		PolychrHAUM & polychrhaum; /// PolychrHAUM instance
 		unsigned char brightness; /// Gloabl brightness [0-255]
-};
-
-/** Leds interface **/
-template <int FULLSIZE, int PIN_LEDDATA>
-class HmiLeds : public HmiLedsCommon {
-	public:
-		/** Constructor
-		  * @param p PolychrHAUM instance
-		  */
-		HmiLeds(PolychrHAUMcommon & p) : HmiLedsCommon(p) {
-			ledvalues = theleds;
-#ifndef BUILD_PC
-			FastLED.addLeds(&ws2811, theleds, sizeof(theleds)/sizeof(*theleds));
-#endif
-		}
-
-	private:
-#ifndef BUILD_PC
-		WS2811Controller800Khz<PIN_LEDDATA, GRB> ws2811;
-#endif
-		CRGB theleds[FULLSIZE]; /// Real led color storage
+		CFastLED * fleds; /// Pointer to FastLED instance
 };
 
 };

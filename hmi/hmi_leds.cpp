@@ -15,19 +15,21 @@ void pc_update_screen();
 
 namespace polychrhaum {
 
-void HmiLedsCommon::init() {
+void HmiLeds::init(CFastLED * leds) {
+	fleds = leds;
+	ledvalues = fleds->leds();
 	clear();
 }
 
-void HmiLedsCommon::clear() {
+void HmiLeds::clear() {
 #ifdef BUILD_PC
 	SDL_FillRect(screen, NULL, SDL_MapRGB(screen->format, 0, 0, 0));
 #else
-	memset(ledvalues, 0, (polychrhaum.get_halfsize() * 2 + 1) * sizeof(*ledvalues));
+	memset(ledvalues, 0, (polychrhaum.get_halfsize() * 2 + 1) * sizeof(CRGB));
 #endif
 }
 
-void HmiLedsCommon::set_rgb(int led, unsigned char r, unsigned char g, unsigned char b) {
+void HmiLeds::set_rgb(int led, unsigned char r, unsigned char g, unsigned char b) {
 	int hwidth = polychrhaum.get_halfsize();
 	if (led < -hwidth || led > hwidth) return;
 #ifdef BUILD_PC
@@ -46,15 +48,15 @@ void HmiLedsCommon::set_rgb(int led, unsigned char r, unsigned char g, unsigned 
 #endif
 }
 
-void HmiLedsCommon::set_brightness(unsigned char value) {
+void HmiLeds::set_brightness(unsigned char value) {
 	brightness = value;
 }
 
-void HmiLedsCommon::update() {
+void HmiLeds::update() {
 #ifdef BUILD_PC
 	pc_update_screen();
 #else
-	FastLED.show(brightness);
+	fleds->show(brightness);
 #endif
 }
 

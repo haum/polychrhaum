@@ -11,23 +11,26 @@ namespace polychrhaum {
 /** Basic animation period **/
 const int dtms = 40;
 
-/** PolychrHAUM controller class (non template dependant part) **/
-class PolychrHAUMcommon {
+};
+
+/** PolychrHAUM controller class **/
+class PolychrHAUM {
 	public:
 		/** Build object **/
-		PolychrHAUMcommon(HmiLedsCommon & leds) :
+		PolychrHAUM() :
+			leds(*this),
 			pin_btn1(-1),
 			pin_btn2(-1),
 			pin_power_btn(-1),
 			pin_pot_light(-1),
 			pin_pot_speed(-1),
+			halfsize(0),
 			adj_time(0),
 			last_frame_time(0),
-			fct_animate(0),
-			leds(leds) {}
+			fct_animate(0) {}
 
 		/** Get number of leds of each side [-HALF_WIDTH:HALF_WIDTH] **/
-		virtual int get_halfsize() = 0;
+		int get_halfsize() { return halfsize; }
 
 		/** Configure on which pins buttons are connected
 		  * @param btn1 Pin of button 1
@@ -70,7 +73,7 @@ class PolychrHAUMcommon {
 		}
 
 		/** Initialization **/
-		void setup();
+		void setup(unsigned int fullsize = 0, CFastLED * fleds = &FastLED);
 
 		/** Non blocking loop
 		  * @note Should be called as often as possible
@@ -87,9 +90,10 @@ class PolychrHAUMcommon {
 		  */
 		void log(int msg);
 
-		HmiSupply power; /// Power supply interface
-		HmiButton btn1;  /// Button 1
-		HmiButton btn2;  /// Button 2
+		polychrhaum::HmiLeds leds; /// LEDs
+		polychrhaum::HmiSupply power; /// Power supply interface
+		polychrhaum::HmiButton btn1;  /// Button 1
+		polychrhaum::HmiButton btn2;  /// Button 2
 
 	private:
 		int pin_btn1,         /// Button 1 pin
@@ -98,6 +102,8 @@ class PolychrHAUMcommon {
 		    pin_pot_light,    /// Light potentiometer pin
 		    pin_pot_speed;    /// Speed potentiometer pin
 
+		unsigned int halfsize; /// Half size
+
 		char adj_time; /// Adjust timing loop
 
 		long last_frame_time, /// Time of last frame
@@ -105,23 +111,7 @@ class PolychrHAUMcommon {
 
 		void (*fct_animate)(); /// Animation function
 
-		HmiLedsCommon & leds;
-
-		HmiButton btn_power; /// Power button
-};
-
-};
-
-/** PolychrHAUM controller class
-  * @param FULLSIZE    Number of total leds
-  * @param PIN_LEDDATA Pin on which ledstrip data line is driven
-  */
-template <int FULLSIZE, int PIN_LEDDATA>
-class PolychrHAUM : public polychrhaum::PolychrHAUMcommon {
-	public:
-		PolychrHAUM() : PolychrHAUMcommon(leds), leds(*this) {}
-		int get_halfsize() { return (FULLSIZE-1) / 2; }
-		polychrhaum::HmiLeds <FULLSIZE, PIN_LEDDATA> leds; /// Led strip
+		polychrhaum::HmiButton btn_power; /// Power button
 };
 
 #endif
