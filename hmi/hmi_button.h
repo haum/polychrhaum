@@ -99,14 +99,14 @@ class HmiButton {
 
 		enum HmiButtonState {
 			HmiButtonState_NOTHING,
-			HmiButtonState_HT1,
-			HmiButtonState_HB1,
-			HmiButtonState_HT2,
-			HmiButtonState_HB2,
-			HmiButtonState_FT1,
-			HmiButtonState_FT2,
-			HmiButtonState_WT1,
-			HmiButtonState_WT2,
+			HmiButtonState_SIMPLE_STARTED,
+			HmiButtonState_SIMPLE_ALMOSTRELEASED,
+			HmiButtonState_DOUBLE_STARTED,
+			HmiButtonState_DOUBLE_ALMOSTRELEASED,
+			HmiButtonState_SIMPLE_PRESSED,
+			HmiButtonState_DOUBLE_PRESSED,
+			HmiButtonState_SIMPLE_LONGPRESSED,
+			HmiButtonState_DOUBLE_LONGPRESSED,
 		};
 
 		enum HmiButtonPress {
