@@ -100,5 +100,16 @@ void PolychrHAUMcommon::log(int msg) {
 #endif
 }
 
+void PolychrHAUMcommon::send_data(char type, char data[4]) {
+	char msg[7];
+	/* Note: we do not use snprintf because we do not want the null-terminator and data is fixed in size anyway */
+	sprintf(msg, "\x11%c%c%c%c%c\x12", type, data[0], data[1], data[2], data[3]);
+#ifdef BUILD_PC
+        fwrite(msg, sizeof(msg), 1, stdout);
+#else
+        Serial.write(msg, sizeof(msg));
+#endif
+}
+
 };
 

@@ -87,6 +87,12 @@ class PolychrHAUMcommon {
 		  */
 		void log(int msg);
 
+		/** Send data for inter-polychrhaum communication
+		  * @param [in] type Number identifying type of message
+		  * @param [in] data Data
+		  */
+		void send_data(char type, char data[4]);
+
 		HmiSupply power; /// Power supply interface
 		HmiButton btn1;  /// Button 1
 		HmiButton btn2;  /// Button 2
