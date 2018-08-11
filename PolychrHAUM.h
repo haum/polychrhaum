@@ -69,6 +69,13 @@ class PolychrHAUMcommon {
 			fct_animate = fct_ani;
 		}
 
+		/** Configure which communication function to use
+		  * @param fct Communication function
+		  */
+		void config_communication(void (*fct_comm)(char, char[4])) {
+			fct_communication = fct_comm;
+		}
+
 		/** Initialization **/
 		void setup();
 
@@ -110,6 +117,10 @@ class PolychrHAUMcommon {
 		     last_btn_time;   /// Time of last button computation
 
 		void (*fct_animate)(); /// Animation function
+		void (*fct_communication)(char, char[4]); /// Communication function
+
+		char comm_buffer[7];
+		unsigned char comm_buffer_idx;
 
 		HmiLedsCommon & leds;
 

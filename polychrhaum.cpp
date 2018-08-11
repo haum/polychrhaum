@@ -2,6 +2,9 @@
 
 #ifdef BUILD_PC
 #include <stdio.h>
+#include <unistd.h>
+#include <string.h>
+#include <poll.h>
 long long millis();
 extern int pc_btn_pwr;
 extern int pc_btn_1;
@@ -26,6 +29,7 @@ void PolychrHAUMcommon::setup() {
 #endif
 	last_btn_time = millis();
 	last_frame_time = millis();
+	comm_buffer_idx = 0;
 }
 
 void PolychrHAUMcommon::loop_step() {
@@ -81,6 +85,40 @@ void PolychrHAUMcommon::loop_step() {
 		btn1.endframe();
 		btn2.endframe();
 		btn_power.endframe();
+	}
+
+	// Compute communication
+#ifdef BUILD_PC
+	pollfd in {STDIN_FILENO, POLLIN, 0};
+	while (comm_buffer_idx < sizeof(comm_buffer) && poll(&in, 1, 0) > 0) {
+		int r = fread(comm_buffer + comm_buffer_idx, 1, 1, stdin);
+		if (r > 0)
+			comm_buffer_idx += r;
+		else if (r == 0)
+			break;
+	}
+#else
+	while (comm_buffer_idx < sizeof(comm_buffer) && Serial.available() > 0) {
+		comm_buffer[comm_buffer_idx] = Serial.read();
+		comm_buffer_idx++;
+	}
+#endif
+	if (comm_buffer_idx >= sizeof(comm_buffer)) {
+		if (comm_buffer[0] == 0x11 && comm_buffer[6] == 0x12) {
+			if (fct_communication)
+				fct_communication(comm_buffer[1], comm_buffer + 2);
+			comm_buffer_idx = 0;
+		} else {
+			for (unsigned char resync = 1; resync < sizeof(comm_buffer); resync++) {
+				if (comm_buffer[resync] == 0x11) {
+					memcpy(comm_buffer, comm_buffer + resync, sizeof(comm_buffer) - resync);
+					comm_buffer_idx -= resync;
+					break;
+				}
+			}
+			if (comm_buffer_idx >= sizeof(comm_buffer))
+				comm_buffer_idx = 0;
+		}
 	}
 }
 
