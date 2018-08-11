@@ -86,17 +86,19 @@ void PolychrHAUMcommon::loop_step() {
 
 void PolychrHAUMcommon::log(const char *msg) {
 #ifdef BUILD_PC
-        printf("%s", msg);
+	printf("%s", msg);
+	fflush(stdout);
 #else
-        Serial.print(msg);
+	Serial.print(msg);
 #endif
 }
 
 void PolychrHAUMcommon::log(int msg) {
 #ifdef BUILD_PC
-        printf("%d", msg);
+	printf("%d", msg);
+	fflush(stdout);
 #else
-        Serial.print(msg);
+	Serial.print(msg);
 #endif
 }
 
